@@ -21,10 +21,10 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:15px}
-body.login-active .bottom-nav,body.register-active .bottom-nav{display:none!important}
+body.login-active .bottom-nav{display:none!important}
 .screen{display:none;flex-direction:column;height:100%;position:absolute;inset:0;z-index:1;padding-bottom:56px}
 .screen.active{display:flex;z-index:2}
-#loginScreen,#registerScreen{padding-bottom:0}
+#loginScreen{padding-bottom:0}
 #loginScreen{justify-content:center;align-items:center;padding:24px;background:linear-gradient(135deg,var(--bg) 0%,var(--surface2) 100%)}
 .login-box{width:100%;max-width:360px;text-align:center}
 .login-box h1{font-size:32px;margin-bottom:6px;background:linear-gradient(135deg,var(--primary),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -518,7 +518,7 @@ div.profile-photo{display:flex;align-items:center;justify-content:center;font-si
   .screen{left:0;right:0;max-width:var(--app-w);margin:0 auto;background:var(--bg);
     border-left:1px solid var(--surface2);border-right:1px solid var(--surface2);
     box-shadow:0 0 46px rgba(0,0,0,.6);padding-bottom:68px}
-  #loginScreen,#registerScreen{max-width:none;border:none;background:none;box-shadow:none;padding-bottom:0}
+  #loginScreen{max-width:none;border:none;background:none;box-shadow:none;padding-bottom:0}
   .bottom-nav{height:68px;width:min(100%,var(--app-w));max-width:none;left:50%;right:auto;transform:translateX(-50%);
     border-radius:0;border:1px solid var(--surface2);border-bottom:none;box-shadow:0 -10px 34px rgba(0,0,0,.5)}
   .nav-btn{font-size:11px}
@@ -617,29 +617,10 @@ div.profile-photo{display:flex;align-items:center;justify-content:center;font-si
     <label class="remember"><input type="checkbox" id="rememberChk"> Запомнить меня</label>
     <button class="btn btn-primary" onclick="doLogin()">Войти</button>
     <button class="btn btn-outline" id="googleAdminBtn" type="button" style="display:none" onclick="googleAdminLogin()">🔒 Войти как админ через Google</button>
-    <!-- Кнопки регистрации нет: аккаунты заводит только админ через консоль Firebase
-         и выдаёт временный пароль. Ссылка ниже — запасной вход на страницу регистрации,
-         если её всё же понадобится открыть руками. -->
-    <button class="btn btn-outline" style="font-size:12px;opacity:.6" id="openRegisterBtn" type="button" onclick="showScreen('registerScreen')">Активация по ссылке</button>
+    <!-- Регистрации нет: аккаунты заводит только админ (запись в админке + учётка в Firebase),
+         человеку выдаётся временный пароль. -->
     <button class="btn btn-outline" style="margin-top:6px;font-size:13px" onclick="forgotPass()">Забыли пароль?</button>
     <div class="error-msg" id="loginError"></div>
-  </div>
-</div>
-
-<div id="registerScreen" class="screen">
-  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px;overflow:auto">
-    <div class="login-box">
-      <h1>📝 Заявка</h1><p>Админ одобрит или отклонит</p>
-      <div class="input-group"><label>Имя</label><input type="text" id="regName"></div>
-      <div class="input-group"><label>Почта (любая)</label><input type="text" id="regLogin" placeholder="name@mail.ru"></div>
-      <div class="input-group"><label>Пароль (мин 6)</label>
-        <div class="pass-wrap"><input type="password" id="regPass" placeholder="••••••">
-          <button class="pass-toggle" id="passToggleReg" type="button" aria-label="Показать пароль" onclick="togglePass('regPass','passToggleReg')"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12.5c3 4 6.4 5.8 9.5 5.8s6.5-1.8 9.5-5.8"/><path d="M6.6 15.4 5.2 18.6M12 17.3v3.4M17.4 15.4l1.4 3.2"/></svg></button></div>
-      </div>
-      <button class="btn btn-primary" onclick="submitReg()">Отправить заявку</button>
-      <button class="btn btn-outline" onclick="showScreen('loginScreen')">← Назад</button>
-      <div class="error-msg" id="regError"></div><div class="success-msg" id="regSuccess"></div>
-    </div>
   </div>
 </div>
 
@@ -1202,7 +1183,7 @@ div.profile-photo{display:flex;align-items:center;justify-content:center;font-si
 <script>
 // Штамп сборки: видно в самом низу админ-панели. Меняю его при каждой прав��е —
 // сразу понятно, залилась новая версия или на сайте ещё старая.
-const BUILD='04.10.2026 18:40';
+const BUILD='04.10.2026 19:05';
 const firebaseConfig={apiKey:"AIzaSyD1UjGlPP3BQ4xv1IMV2GXWDCcSe0Uc48A",authDomain:"minichat-40954.firebaseapp.com",databaseURL:"https://minichat-40954-default-rtdb.europe-west1.firebasedatabase.app",projectId:"minichat-40954",storageBucket:"minichat-40954.firebasestorage.app",messagingSenderId:"1044691110805",appId:"1:1044691110805:web:6a58e9196fd1f73f70849c"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.database();
@@ -1384,7 +1365,6 @@ function offAll(){[usersLRef,chatLRef,groupsLRef,newsLRef,pendLRef,notifLRef,frL
 
 function showScreen(id){
   document.body.classList.toggle('login-active',id==='loginScreen');
-  document.body.classList.toggle('register-active',id==='registerScreen');
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
@@ -1604,58 +1584,7 @@ async function finishGoogleLogin(result){
     await makeSession(uid);enterApp(uid,info);
   }catch(er){console.error(er);e.textContent='Ошибка входа: '+(er.message||er);}
 }
-// Регистрация: аккаунт в Firebase создаётся сразу, но в приложение не пускает,
-// пока админ не одобрит (approved:false). Пароль уходит только в Firebase.
-async function submitReg(){
-  const name=document.getElementById('regName').value.trim();
-  const login=document.getElementById('regLogin').value.trim().toLowerCase();
-  const pass=document.getElementById('regPass').value;
-  const e=document.getElementById('regError'),s=document.getElementById('regSuccess');e.textContent='';s.textContent='';
-  if(!name||!login||!pass){e.textContent='Заполни всё';return;}
-  if(pass.length<6){e.textContent='Мин 6 символов';return;}
-  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(login)){e.textContent='Нужен настоящий e-mail (любой почты, не только Google)';return;}
-  if(isAdminEmail(login)){e.textContent='Эта почта занята админом';return;}
-  if(!firebase.auth){e.textContent='Firebase Auth не загрузился — проверь интернет';return;}
-  e.textContent='⏳ Создаём аккаунт...';
-  try{
-    // 1) аккаунт в Firebase + письмо подтверждения
-    const cred=await firebase.auth().createUserWithEmailAndPassword(login,pass);
-    const fuid=cred.user.uid;
-    try{await cred.user.sendEmailVerification();}catch(x){}
-    // 2) Может, такая почта уже есть в базе — со старой версии, где uid был свой.
-    //    Тогда новую запись не создаём: человек при входе привяжет свою Firebase-учётку
-    //    к старой записи по почте, и вся его переписка останется на месте.
-    const old=await db.ref('users').orderByChild('login').equalTo(login).once('value');
-    let uid=fuid,legacy=false;
-    if(old.exists()){
-      const k=Object.keys(old.val())[0];
-      if(!old.val()[k].firebaseUid){uid=k;legacy=true;}
-    }
-    if(!legacy){
-      // ВНУТРЕННИЙ uid = uid Firebase. Иначе правила базы (auth.uid === $uid) не пропустят запись.
-      await db.ref('users/'+uid).set({login:login,name:name,isAdmin:false,avatar:'',status:'',
-        color:'#f0f0f0',theme:'dark',userCode:genCode(),createdAt:Date.now(),hideFromList:true});
-    }
-    // approved НЕ пишем: approvals/ закрыта правилами для всех, кроме админа.
-    // Пока одобрения нет — ветки не существует, и сообщения недоступны.
-    await db.ref('pendingRegistrations').push({name:name,login:login,uid:uid,fuid:fuid,legacy:legacy,ts:Date.now()});
-    // 3) выходим — в приложение пустит только после одобрения админом
-    await firebase.auth().signOut();
-    s.textContent='✅ Заявка отправлена! Подтверди почту по письму и жди одобрения админа.';
-    document.getElementById('regName').value='';
-    document.getElementById('regLogin').value='';
-    document.getElementById('regPass').value='';
-  }catch(er){
-    const c=(er&&er.code)||'';
-    if(c==='auth/email-already-in-use')e.textContent='Такая почта уже зарегистрирована';
-    else if(c==='auth/invalid-email')e.textContent='Некорректная почта';
-    else if(c==='auth/weak-password')e.textContent='Пароль слишком простой';
-    else if(c==='auth/network-request-failed')e.textContent='Нет связи с сервером';
-    else if(c==='PERMISSION_DENIED')e.textContent='База не пускает запись — проверь, опубликованы ли правила доступа';
-    else e.textContent='Ошибка: '+(er&&er.message||c||'неизвестно');
-    try{firebase.auth().signOut();}catch(x){}
-  }
-}
+// Регистрации в приложении нет: записи заводит админ, учётки — Firebase Console.
 document.getElementById('loginPass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 document.getElementById('loginEmail').addEventListener('input',toggleAdminHint);
 document.getElementById('loginEmail').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
